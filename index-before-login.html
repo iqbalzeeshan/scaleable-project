@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Reels Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .main-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reel-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            background-image: url('https://via.placeholder.com/500x800');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .top-icons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .top-icons .icon-button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 36px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .top-icons .icon-button:hover {
+            transform: scale(1.2);
+        }
+
+        .top-icons .file-input {
+            display: none;
+        }
+
+        .overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .title {
+            max-width: 70%;
+            font-size: 16px;
+            line-height: 1.5;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 32px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .action-button:hover {
+            transform: scale(1.2);
+        }
+
+        .action-button i {
+            font-size: 36px;
+        }
+
+        .liked {
+            color: red;
+        }
+
+        .comment-box {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 500px;
+            width: 90%;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-box textarea {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            resize: none;
+            font-size: 14px;
+        }
+
+        .comment-box .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .comment-box button {
+            padding: 8px 16px;
+            background: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .comment-box button:hover {
+            background: #0056b3;
+        }
+
+        .close-button {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .close-button:hover {
+            background: #cc0000;
+        }
+
+        .navigation-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .navigation-button:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .prev-button {
+            left: 0;
+        }
+
+        .next-button {
+            right: 0;
+        }
+
+        .count-text {
+            font-size: 14px;
+            color: #ddd;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        @media (max-width: 500px) {
+            .title {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <button class="navigation-button prev-button" onclick="prevReel()">&lt;</button>
+
+        <div class="reel-container">
+            <video class="video" autoplay loop muted>
+                <source src="example-video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <div class="top-icons">
+                <button class="icon-button" onclick="profile()">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+                <label class="icon-button" for="file-upload">
+                    <i class="fas fa-upload"></i>
+                </label>
+                <input id="file-upload" type="file" class="file-input" onchange="handleFileUpload(event)">
+            </div>
+
+            <div class="overlay">
+                <div class="title">This is the title of the reel</div>
+                <div class="actions">
+                    <button class="action-button" onclick="toggleLike(this)">
+                        <i class="fas fa-heart"></i>
+                    </button>
+                    <div class="count-text" id="like-count">123 likes</div>
+                    <button class="action-button" onclick="share()">
+                        <i class="fas fa-share"></i>
+                    </button>
+                    <button class="action-button" onclick="toggleCommentBox()">
+                        <i class="fas fa-comment"></i>
+                    </button>
+                    <div class="count-text" id="comment-count">45 comments</div>
+                </div>
+            </div>
+
+            <div class="comment-box" id="comment-box">
+                <textarea rows="3" placeholder="Write a comment..."></textarea>
+                <div class="actions">
+                    <button class="close-button" onclick="toggleCommentBox()">Close</button>
+                    <button onclick="submitComment()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <button class="navigation-button next-button" onclick="nextReel()">&gt;</button>
+    </div>
+
+    <script>
+        function toggleLike(button) {
+            const icon = button.querySelector('i');
+            icon.classList.toggle('liked');
+        }
+
+        function profile() {
+            alert('Profile functionality coming soon!');
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                alert(`File uploaded: ${file.name}`);
+            }
+        }
+
+        function share() {
+            // alert('Share button is not required');
+        }
+
+        function toggleCommentBox() {
+            const commentBox = document.getElementById('comment-box');
+            commentBox.style.display = commentBox.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function submitComment() {
+            const commentBox = document.getElementById('comment-box');
+            const comment = commentBox.querySelector('textarea').value;
+            if (comment.trim()) {
+                alert(`Comment submitted: ${comment}`);
+                commentBox.querySelector('textarea').value = '';
+                commentBox.style.display = 'none';
+            } else {
+                alert('comment is required to submit');
+            }
+        }
+
+        function prevReel() {
+            alert('Previous reel functionality coming soon!');
+        }
+
+        function nextReel() {
+            alert('Next reel functionality coming soon!');
+        }
+    </script>
+</body>
+</html>
