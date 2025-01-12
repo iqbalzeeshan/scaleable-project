@@ -45,8 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert user data into the database
     $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (:username, :email, :password)");
     if ($stmt->execute(['username' => $username, 'email' => $email, 'password' => $hashedPassword])) {
+        // Retrieve the last inserted ID
+        $lastInsertId = $conn->lastInsertId();
         //start session to log in
         session_start();
+        $_SESSION['user_id'] = $lastInsertId;
         $_SESSION['username'] = $username;
         $_SESSION['email'] = $email;
 
